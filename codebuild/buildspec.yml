@@ -29,11 +29,12 @@ phases:
     commands:
       - echo Start post_build...
       - echo Writing image definitions file...
-      - printf '{"Tag":"%s"}' $IMAGE_TAG > build_detail_$CODEBUILD_BUILD_NUMBER.json
+      - printf '{"Tag":"%s"}' $IMAGE_TAG > $CODEBUILD_SRC_DIR/target/build_detail_$CODEBUILD_BUILD_NUMBER.json
 
 artifacts:
   files:
-    - $target/$MODULE_NAME-$IMAGE_TAG.jar
+    - '*/*.jar'
     - build_detail_$CODEBUILD_BUILD_NUMBER.json
+  base-directory: target
   s3-prefix: my-artifact-app-java-pipe
 
