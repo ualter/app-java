@@ -33,6 +33,7 @@ phases:
 
 artifacts:
   files:
-    - $CODEBUILD_SRC_DIR/target/$MODULE_NAME-$IMAGE_TAG.jar
+    - $target/$MODULE_NAME-$IMAGE_TAG.jar
     - build_detail_$CODEBUILD_BUILD_NUMBER.json
+  s3-prefix: my-artifact-app-java-pipe
 
