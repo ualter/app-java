@@ -21,6 +21,7 @@ public class MockCityRepository {
         cities.add(new City(6L, "New York", 8550000));
         cities.add(new City(7L, "Edinburgh", 464000));
         cities.add(new City(8L, "Berlin", 3671000));
+        cities.add(new City(9L, "Frankfurt", 4121000));
 
         return cities;
     }
