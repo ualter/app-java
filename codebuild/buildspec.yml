@@ -34,7 +34,7 @@ phases:
 artifacts:
   files:
     - '**/*.jar'
-    - build_detail_$CODEBUILD_BUILD_NUMBER.json
+    - build_detail_*.json
   base-directory: target
   # s3-prefix: my-artifact-app-java-pipe
 
