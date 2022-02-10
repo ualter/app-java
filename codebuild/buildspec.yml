@@ -16,53 +16,30 @@ phases:
       - export ID_REPO_MVN="$ARTIFACT_DOMAIN-$ARTIFACT_REPO_NAME"
       - export NO_MVN_DOWNLOAD_MESSAGES="-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
       - cp ./codebuild/codebuild-maven-settings.xml $CODEBUILD_SRC_DIR/settings.xml
-      - REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com 
-      - IMAGE_TAG=$(date +%Y-%m-%d-%H%M)
-      - echo Start pre_build...
-      - echo Logging in to Amazon ECR... $REPOSITORY_URI
-      - aws --version
-      - for counter in `seq 1 6`; 
-          do 
-            echo Docker login, attempt $counter of 6;
-            aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $REPOSITORY_URI;
-            if [ $? -eq 0 ]; then 
-                 break; 
-            fi; 
-            sleep 2;
-          done
-      - export JKEYSTORE="$JAVA_HOME/lib/security/cacerts"
-      - keytool -keystore ${JKEYSTORE} -storepass changeit -noprompt -alias SonarQueb -import -file ./codebuild/sonar-sre.cer
-      - keytool -list -keystore ${JKEYSTORE} -alias SonarQueb -storepass changeit    
       - echo Preparing Building Docker for $MODULE_NAME...
   build:
     commands:
       - echo Build started on `date`
-      - echo Building the Docker image...
       - cd $CODEBUILD_SRC_DIR
-      - mvn -s $CODEBUILD_SRC_DIR/settings.xml -B ${NO_MVN_DOWNLOAD_MESSAGES} clean compile test
-      - mvn -s $CODEBUILD_SRC_DIR/settings.xml -B ${NO_MVN_DOWNLOAD_MESSAGES} sonar:sonar -Dsonar.host.url=$SONARQUBE_URL -Dsonar.login=$SONARQUBE_TOKEN -Dsonar.projectName=$MODULE_NAME -Dsonar.projectBaseDir=$CODEBUILD_SRC_DIR -Dsonar.sources=src/main -Dsonar.sources.tests=src/test -Dsonar.scm.disabled=true 
-      - mvn -s $CODEBUILD_SRC_DIR/settings.xml -B ${NO_MVN_DOWNLOAD_MESSAGES} package deploy
-      - docker build --build-arg IMAGE_TAG=$IMAGE_TAG -t $REPOSITORY_PATH/$IMAGE_REPO_NAME:$IMAGE_TAG .
-      - docker tag $REPOSITORY_PATH/$IMAGE_REPO_NAME:$IMAGE_TAG $REPOSITORY_URI/$REPOSITORY_PATH/$IMAGE_REPO_NAME:$IMAGE_TAG  
+      - mvn -s $CODEBUILD_SRC_DIR/settings.xml -B ${NO_MVN_DOWNLOAD_MESSAGES} clean compile test package
+      # - mvn -s $CODEBUILD_SRC_DIR/settings.xml -B ${NO_MVN_DOWNLOAD_MESSAGES} deploy
       - echo Build completed on `date`
   post_build:
     commands:
       - echo Start post_build...
-      - echo Pushing the Docker image TAG $IMAGE_TAG...
-      - docker push $REPOSITORY_URI/$REPOSITORY_PATH/$IMAGE_REPO_NAME:$IMAGE_TAG
       - echo Writing image definitions file...
       - printf '{"ImageURI":"%s"}' $REPOSITORY_URI/$REPOSITORY_PATH/$IMAGE_REPO_NAME:$IMAGE_TAG > imageDetail_$CODEBUILD_BUILD_NUMBER.json
 
-reports:
-  MyFunctionalReports: 
-    files:
-      - '**/*'
-    base-directory: 'target/surefire-reports'
-  MyCoverageReports:  
-    files:
-      - 'jacoco.xml'
-    base-directory: 'target/site/jacoco'  
-    file-format: 'JACOCOXML'  
+# reports:
+#   MyFunctionalReports: 
+#     files:
+#       - '**/*'
+#     base-directory: 'target/surefire-reports'
+#   MyCoverageReports:  
+#     files:
+#       - 'jacoco.xml'
+#     base-directory: 'target/site/jacoco'  
+#     file-format: 'JACOCOXML'  
 
 artifacts:
   files:
