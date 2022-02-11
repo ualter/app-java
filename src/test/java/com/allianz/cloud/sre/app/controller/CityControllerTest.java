@@ -39,7 +39,7 @@ public class CityControllerTest {
 
 		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/city").accept(MediaType.APPLICATION_JSON);
 
-		String expectedResult = "[{\"name\":\"Paris\",\"population\":432000},{\"name\":\"Barcelona\",\"population\":1759000},{\"name\":\"Roma\",\"population\":1280000},{\"name\":\"Warsaw\",\"population\":1748000},{\"name\":\"Los Angeles\",\"population\":3971000},{\"name\":\"New York\",\"population\":8550000},{\"name\":\"Edinburgh\",\"population\":464000},{\"name\":\"Berlin\",\"population\":3671000}]";
+		String expectedResult = "[{\"id\":1,\"name\":\"Paris\",\"population\":432000},{\"id\":2,\"name\":\"Barcelona\",\"population\":1759000},{\"id\":3,\"name\":\"Roma\",\"population\":1280000},{\"id\":4,\"name\":\"Warsaw\",\"population\":1748000},{\"id\":5,\"name\":\"Los Angeles\",\"population\":3971000},{\"id\":6,\"name\":\"New York\",\"population\":8550000},{\"id\":7,\"name\":\"Edinburgh\",\"population\":464000},{\"id\":8,\"name\":\"Berlin\",\"population\":3671000},{\"id\":9,\"name\":\"Frankfurt\",\"population\":4121000}]";
 
 		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 		System.out.println("\n>>------>");
