@@ -9,7 +9,7 @@
 		<relativePath/>
 	</parent>
 	<groupId>com.allianz.cloud.sre.app</groupId>
-	<artifactId>app</artifactId>
+	<artifactId>app-java-pipe</artifactId>
 	<version>${env.IMAGE_TAG}</version>
 	<name>app</name>
 
@@ -75,12 +75,12 @@
 		</plugins>
 	</build>
 
-	<distributionManagement>
+	<!-- <distributionManagement>
 		<repository>
 			<id>${env.ID_REPO_MVN}</id>
 			<name>${env.ID_REPO_MVN}</name>
 			<url>${env.URL_REPO_MVN}</url>
 		</repository>
-	</distributionManagement>
+	</distributionManagement> -->
 
 </project>
